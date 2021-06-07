@@ -138,8 +138,6 @@
         LightBlue700 = 0x0288D1,
         LightBlue800 = 0x0277BD,
         LightBlue900 = 0x01579B,
-        CustomPrimary = 0x1b2632,
-        CustomSecondary = 0x33495F,
         Cyan50 = 0xE0F7FA,
         Cyan100 = 0xB2EBF2,
         Cyan200 = 0x80DEEA,
