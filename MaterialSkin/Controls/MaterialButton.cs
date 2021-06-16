@@ -23,7 +23,7 @@
 
         // icons
         private TextureBrush iconsBrushes;
-        
+
         /// <summary>
         /// Gets or sets the Depth
         /// </summary>
@@ -73,16 +73,6 @@
         }
 
 
-        [Category("Material Skin")]
-        /// <summary>
-        /// Gets or sets a value indicating whether HighEmphasis
-        /// </summary>
-        public bool IsAnimating
-        {
-            get { return isAnimating; }
-            set { isAnimating = value; Invalidate(); }
-        }
-
         [DefaultValue(true)]
         [Category("Material Skin")]
         [Description("Draw Shadows around control")]
@@ -106,17 +96,17 @@
         public MaterialButtonDensity Density
         {
             get { return _density; }
-            set 
-            { 
+            set
+            {
                 _density = value;
-                if (_density== MaterialButtonDensity.Dense)
+                if (_density == MaterialButtonDensity.Dense)
                     Size = new Size(Size.Width, HEIGHTDENSE);
                 else
                     Size = new Size(Size.Width, HEIGHTDEFAULT);
                 Invalidate();
             }
         }
-        
+
         protected override void InitLayout()
         {
             base.InitLayout();
@@ -183,7 +173,6 @@
 
         private bool drawShadows;
         private bool highEmphasis;
-        private bool isAnimating;
         private bool useAccentColor;
         private MaterialButtonType type;
         private MaterialButtonDensity _density;
@@ -224,7 +213,6 @@
             DrawShadows = true;
             HighEmphasis = true;
             UseAccentColor = false;
-            IsAnimating = false;
             Type = MaterialButtonType.Contained;
             Density = MaterialButtonDensity.Default;
 
@@ -299,7 +287,7 @@
 
             int newWidth, newHeight;
             //Resize icon if greater than ICON_SIZE
-            if (Icon.Width> ICON_SIZE || Icon.Height > ICON_SIZE)
+            if (Icon.Width > ICON_SIZE || Icon.Height > ICON_SIZE)
             {
                 //calculate aspect ratio
                 float aspect = Icon.Width / (float)Icon.Height;
@@ -457,31 +445,29 @@
             }
 
             //Ripple
-            if (isAnimating == true)
+            if (_animationManager.IsAnimating())
             {
-                if (_animationManager.IsAnimating())
+                g.Clip = new Region(buttonRectF);
+                for (var i = 0; i < _animationManager.GetAnimationCount(); i++)
                 {
-                    g.Clip = new Region(buttonRectF);
-                    for (var i = 0; i < _animationManager.GetAnimationCount(); i++)
-                    {
-                        var animationValue = _animationManager.GetProgress(i);
-                        var animationSource = _animationManager.GetSource(i);
+                    var animationValue = _animationManager.GetProgress(i);
+                    var animationSource = _animationManager.GetSource(i);
 
-                        using (Brush rippleBrush = new SolidBrush(
-                            Color.FromArgb((int)(100 - (animationValue * 100)), // Alpha animation
-                            (Type == MaterialButtonType.Contained && HighEmphasis ? (UseAccentColor ?
-                                SkinManager.ColorScheme.AccentColor.Lighten(0.5f) : // Emphasis with accent
-                                SkinManager.ColorScheme.LightPrimaryColor) : // Emphasis
-                                (UseAccentColor ? SkinManager.ColorScheme.AccentColor : // Normal with accent
-                                SkinManager.Theme == MaterialSkinManager.Themes.LIGHT ? SkinManager.ColorScheme.PrimaryColor : SkinManager.ColorScheme.LightPrimaryColor))))) // Normal
-                        {
-                            var rippleSize = (int)(animationValue * Width * 2);
-                            g.FillEllipse(rippleBrush, new Rectangle(animationSource.X - rippleSize / 2, animationSource.Y - rippleSize / 2, rippleSize, rippleSize));
-                        }
+                    using (Brush rippleBrush = new SolidBrush(
+                        Color.FromArgb((int)(100 - (animationValue * 100)), // Alpha animation
+                        (Type == MaterialButtonType.Contained && HighEmphasis ? (UseAccentColor ?
+                            SkinManager.ColorScheme.AccentColor.Lighten(0.5f) : // Emphasis with accent
+                            SkinManager.ColorScheme.LightPrimaryColor) : // Emphasis
+                            (UseAccentColor ? SkinManager.ColorScheme.AccentColor : // Normal with accent
+                            SkinManager.Theme == MaterialSkinManager.Themes.LIGHT ? SkinManager.ColorScheme.PrimaryColor : SkinManager.ColorScheme.LightPrimaryColor))))) // Normal
+                    {
+                        var rippleSize = (int)(animationValue * Width * 2);
+                        g.FillEllipse(rippleBrush, new Rectangle(animationSource.X - rippleSize / 2, animationSource.Y - rippleSize / 2, rippleSize, rippleSize));
                     }
-                    g.ResetClip();
-                } 
+                }
+                g.ResetClip();
             }
+
 
             //Icon
             var iconRect = new Rectangle(8, 6, ICON_SIZE, ICON_SIZE);
@@ -561,7 +547,7 @@
                 s.Width += extra;
                 s.Height = HEIGHTDEFAULT;
             }
-            if (Icon != null && Text.Length==0 && s.Width < MINIMUMWIDTHICONONLY) s.Width = MINIMUMWIDTHICONONLY;
+            if (Icon != null && Text.Length == 0 && s.Width < MINIMUMWIDTHICONONLY) s.Width = MINIMUMWIDTHICONONLY;
             else if (s.Width < MINIMUMWIDTH) s.Width = MINIMUMWIDTH;
 
             return s;
