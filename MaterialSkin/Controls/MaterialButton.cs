@@ -72,6 +72,17 @@
             set { highEmphasis = value; Invalidate(); }
         }
 
+
+        [Category("Material Skin")]
+        /// <summary>
+        /// Gets or sets a value indicating whether HighEmphasis
+        /// </summary>
+        public bool IsAnimating
+        {
+            get { return isAnimating; }
+            set { isAnimating = value; Invalidate(); }
+        }
+
         [DefaultValue(true)]
         [Category("Material Skin")]
         [Description("Draw Shadows around control")]
@@ -172,6 +183,7 @@
 
         private bool drawShadows;
         private bool highEmphasis;
+        private bool isAnimating;
         private bool useAccentColor;
         private MaterialButtonType type;
         private MaterialButtonDensity _density;
@@ -212,6 +224,7 @@
             DrawShadows = true;
             HighEmphasis = true;
             UseAccentColor = false;
+            IsAnimating = false;
             Type = MaterialButtonType.Contained;
             Density = MaterialButtonDensity.Default;
 
@@ -444,27 +457,30 @@
             }
 
             //Ripple
-            if (_animationManager.IsAnimating())
+            if (isAnimating == true)
             {
-                g.Clip = new Region(buttonRectF);
-                for (var i = 0; i < _animationManager.GetAnimationCount(); i++)
+                if (_animationManager.IsAnimating())
                 {
-                    var animationValue = _animationManager.GetProgress(i);
-                    var animationSource = _animationManager.GetSource(i);
-
-                    using (Brush rippleBrush = new SolidBrush(
-                        Color.FromArgb((int)(100 - (animationValue * 100)), // Alpha animation
-                        (Type == MaterialButtonType.Contained && HighEmphasis ? (UseAccentColor ?
-                            SkinManager.ColorScheme.AccentColor.Lighten(0.5f) : // Emphasis with accent
-                            SkinManager.ColorScheme.LightPrimaryColor) : // Emphasis
-                            (UseAccentColor ? SkinManager.ColorScheme.AccentColor : // Normal with accent
-                            SkinManager.Theme == MaterialSkinManager.Themes.LIGHT ? SkinManager.ColorScheme.PrimaryColor : SkinManager.ColorScheme.LightPrimaryColor))))) // Normal
+                    g.Clip = new Region(buttonRectF);
+                    for (var i = 0; i < _animationManager.GetAnimationCount(); i++)
                     {
-                        var rippleSize = (int)(animationValue * Width * 2);
-                        g.FillEllipse(rippleBrush, new Rectangle(animationSource.X - rippleSize / 2, animationSource.Y - rippleSize / 2, rippleSize, rippleSize));
+                        var animationValue = _animationManager.GetProgress(i);
+                        var animationSource = _animationManager.GetSource(i);
+
+                        using (Brush rippleBrush = new SolidBrush(
+                            Color.FromArgb((int)(100 - (animationValue * 100)), // Alpha animation
+                            (Type == MaterialButtonType.Contained && HighEmphasis ? (UseAccentColor ?
+                                SkinManager.ColorScheme.AccentColor.Lighten(0.5f) : // Emphasis with accent
+                                SkinManager.ColorScheme.LightPrimaryColor) : // Emphasis
+                                (UseAccentColor ? SkinManager.ColorScheme.AccentColor : // Normal with accent
+                                SkinManager.Theme == MaterialSkinManager.Themes.LIGHT ? SkinManager.ColorScheme.PrimaryColor : SkinManager.ColorScheme.LightPrimaryColor))))) // Normal
+                        {
+                            var rippleSize = (int)(animationValue * Width * 2);
+                            g.FillEllipse(rippleBrush, new Rectangle(animationSource.X - rippleSize / 2, animationSource.Y - rippleSize / 2, rippleSize, rippleSize));
+                        }
                     }
-                }
-                g.ResetClip();
+                    g.ResetClip();
+                } 
             }
 
             //Icon

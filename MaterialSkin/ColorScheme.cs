@@ -292,7 +292,7 @@
         LightBlue200 = 0x40C4FF,
         LightBlue400 = 0x00B0FF,
         LightBlue700 = 0x0091EA,
-        CustomAccent = 0x51a0fb,
+        CustomAccent = 0x3f67a6,
         Cyan100 = 0x84FFFF,
         Cyan200 = 0x18FFFF,
         Cyan400 = 0x00E5FF,

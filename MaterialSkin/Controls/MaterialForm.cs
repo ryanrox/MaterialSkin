@@ -283,8 +283,8 @@
             Padding = new Padding(3, STATUS_BAR_HEIGHT + ACTION_BAR_HEIGHT, 3, 3);      //Keep space for resize by mouse
 
            // This enables the form to trigger the MouseMove event even when mouse is over another control
-            Application.AddMessageFilter(new MouseMessageFilter());
-            MouseMessageFilter.MouseMove += OnGlobalMouseMove;
+            //Application.AddMessageFilter(new MouseMessageFilter());
+            //MouseMessageFilter.MouseMove += OnGlobalMouseMove;
 
             _clickAnimManager = new AnimationManager()
             {
